@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeafCare — AI Plant Disease Detection & Treatment Advisory</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="logo">🌿</div>
+      <div>
+        <b>LeafCare</b> <span class="ver">V1.0</span>
+        <small data-i18n="tagline">AI Plant Health & Advisory</small>
+      </div>
+    </div>
+
+    <nav id="nav">
+      <a href="#dashboard" data-page="dashboard"><i>▦</i><span data-i18n="navDash">Dashboard</span></a>
+      <a href="#analyze" data-page="analyze"><i>📷</i><span data-i18n="navAnalyze">Analyze Plant</span><em class="tag">AI</em></a>
+      <a href="#knowledge" data-page="knowledge"><i>📖</i><span data-i18n="navKnow">Knowledge Base</span></a>
+      <a href="#diseases" data-page="diseases"><i>🛡️</i><span data-i18n="navDis">Common Diseases</span></a>
+      <a href="#treatment" data-page="treatment"><i>💊</i><span data-i18n="navTreat">Treatment Guide</span></a>
+      <a href="#tips" data-page="tips"><i>🌱</i><span data-i18n="navTips">Tips & Prevention</span></a>
+    </nav>
+
+    <div class="side-bottom">
+      <div class="status"><span class="dot"></span><span data-i18n="engine">AI Engine Live</span><small id="engineState">Demo</small></div>
+      <div class="model">
+        <div class="chip">⚙️</div>
+        <div><b>MobileNetV2</b><small id="modelAcc">7 classes</small></div>
+      </div>
+    </div>
+  </aside>
+  <div id="scrim"></div>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+      <div class="crumbs"><span>LEAFCARE</span> / <b id="crumb">Dashboard</b></div>
+      <div class="top-actions">
+        <button id="langBtn" class="icon-btn txt">हिंदी</button>
+        <a href="#analyze" class="btn small" data-i18n="analyzeNow">＋ Analyze Plant</a>
+        <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ===== DASHBOARD ===== -->
+      <section class="page" id="dashboard">
+        <p class="eyebrow"><span id="greet">GOOD DAY!</span> 🌱</p>
+        <h1><span data-i18n="heroA">Let's keep your</span> <mark data-i18n="heroB">plants healthy.</mark></h1>
+        <p class="lead" data-i18n="heroSub">Upload a leaf photo. LeafCare identifies the condition, shows how badly the leaf is affected, and gives simple treatment advice.</p>
+
+        <div class="panel">
+          <div class="drop" id="dashDrop" tabindex="0">
+            <div class="up-icon">☁️⬆</div>
+            <h3 data-i18n="dropTitle">Drag & drop a leaf image here</h3>
+            <p><span data-i18n="or">or</span> <u data-i18n="browse">click to browse</u> <span data-i18n="fromDevice">from your device</span></p>
+            <div class="fmt">JPG • PNG • WEBP</div>
+            <div class="row">
+              <label class="btn ghost">🖼️ <span data-i18n="chooseFile">Choose File</span><input type="file" id="dashFile" accept="image/*" hidden></label>
+              <label class="btn ghost">📷 <span data-i18n="takePhoto">Take Photo</span><input type="file" id="dashCam" accept="image/*" capture="environment" hidden></label>
+              <button class="btn ghost" id="demoBtn">🧪 <span data-i18n="tryDemo">Try Demo</span></button>
+            </div>
+          </div>
+          <div class="guard"><b data-i18n="guardTag">GUARDRAIL ACTIVE</b><span data-i18n="guardText">LeafCare asks for a retake when it is not confident, so unclear or non-leaf photos do not get a wrong disease label.</span></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><b>7</b><span data-i18n="stClasses">Classes detected</span></div>
+          <div class="stat"><b>2</b><span data-i18n="stCrops">Crops supported</span></div>
+          <div class="stat"><b id="scanCount">0</b><span data-i18n="stScans">Scans done</span></div>
+          <div class="stat"><b>60%</b><span data-i18n="stThr">Min. confidence</span></div>
+        </div>
+
+        <div class="two">
+          <div class="panel">
+            <h3 data-i18n="howTitle">How it works</h3>
+            <ol class="how">
+              <li data-i18n="h1">Take or upload a leaf photo</li>
+              <li data-i18n="h2">AI predicts the disease with a confidence score</li>
+              <li data-i18n="h3">Severity is estimated from the affected leaf area</li>
+              <li data-i18n="h4">Get treatment and prevention steps</li>
+            </ol>
+          </div>
+          <div class="panel">
+            <div class="between"><h3 data-i18n="recent">Recent scans</h3><button class="link" id="clearHist" data-i18n="clear">Clear</button></div>
+            <ul id="history" class="history"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ANALYZE ===== -->
+      <section class="page" id="analyze" hidden>
+        <h1 data-i18n="navAnalyze">Analyze Plant</h1>
+
+        <div class="panel" id="uploadCard">
+          <div class="drop small" id="drop" tabindex="0">
+            <img id="preview" alt="Leaf preview" hidden>
+            <div id="dropText">
+              <div class="up-icon">🍃</div>
+              <h3 data-i18n="dropTitle">Drag & drop a leaf image here</h3>
+              <p data-i18n="orChoose">or choose below</p>
+            </div>
+          </div>
+          <div class="row">
+            <label class="btn ghost">🖼️ <span data-i18n="chooseFile">Choose File</span><input type="file" id="fileInput" accept="image/*" hidden></label>
+            <label class="btn ghost">📷 <span data-i18n="takePhoto">Take Photo</span><input type="file" id="camInput" accept="image/*" capture="environment" hidden></label>
+          </div>
+          <ul class="tips-mini">
+            <li data-i18n="tip1">Show only one leaf, filling most of the photo</li>
+            <li data-i18n="tip2">Use daylight, avoid shadows</li>
+            <li data-i18n="tip3">Keep the photo sharp, not blurry</li>
+          </ul>
+          <button id="analyzeBtn" class="btn big" disabled data-i18n="analyze">🔍 Analyze leaf</button>
+        </div>
+
+        <div class="panel center" id="loading" hidden>
+          <div class="spinner"></div>
+          <p id="loadMsg">…</p>
+        </div>
+
+        <div id="result" hidden>
+          <div class="panel" id="uncertain" hidden>
+            <h3>⚠️ <span data-i18n="uncTitle">We are not sure</span></h3>
+            <p data-i18n="uncText">The photo is not clear enough. Please retake it in good light with one leaf filling the frame.</p>
+            <button class="btn" id="retakeBtn" data-i18n="retake">Try another photo</button>
+          </div>
+
+          <div id="resultBody">
+            <div class="result-grid">
+              <div class="panel"><img id="resImg" alt="Analyzed leaf" class="res-img"></div>
+              <div>
+                <div class="panel verdict" id="verdictCard">
+                  <div>
+                    <p class="label" data-i18n="crop">Crop</p>
+                    <p class="cropname" id="rCrop">—</p>
+                    <p class="label" data-i18n="disease">Result</p>
+                    <h2 id="rDisease">—</h2>
+                    <span class="pill" id="rStatus"></span>
+                  </div>
+                  <div class="ring">
+                    <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="bg"/><circle cx="60" cy="60" r="52" class="fg" id="ringFg"/></svg>
+                    <div class="ring-text"><b id="rConf">0%</b><small data-i18n="conf">confident</small></div>
+                  </div>
+                </div>
+                <div class="panel" id="sevCard">
+                  <h3 data-i18n="sevTitle">How badly is the leaf affected?</h3>
+                  <div class="bar"><div class="fill" id="sevFill"></div></div>
+                  <div class="bar-labels"><span data-i18n="mild">Mild</span><span data-i18n="moderate">Moderate</span><span data-i18n="severe">Severe</span></div>
+                  <p><b id="sevPct">0%</b> <span data-i18n="sevOf">of the leaf is affected —</span> <b id="sevLabel"></b></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h3 data-i18n="advTitle">What should I do?</h3>
+              <div class="tabs">
+                <button class="tab active" data-tab="about" data-i18n="tAbout">About</button>
+                <button class="tab" data-tab="treat" data-i18n="tTreat">Treatment</button>
+                <button class="tab" data-tab="prevent" data-i18n="tPrevent">Prevention</button>
+              </div>
+              <ul id="advList" class="advice"></ul>
+              <p class="disclaimer" data-i18n="disc">This is guidance only. For chemical sprays, check dose and safety with your local agriculture officer or Krishi Vigyan Kendra (KVK).</p>
+            </div>
+
+            <div class="row">
+              <button class="btn" id="againBtn" data-i18n="another">Check another leaf</button>
+              <button class="btn ghost" id="shareBtn" data-i18n="share">Share result</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== COMMON DISEASES ===== -->
+      <section class="page" id="diseases" hidden>
+        <h1 data-i18n="navDis">Common Diseases</h1>
+        <p class="lead" data-i18n="disSub">Diseases LeafCare can detect. Tap a card for details.</p>
+        <div class="chips" id="chips">
+          <button class="chip-btn active" data-crop="all" data-i18n="all">All</button>
+          <button class="chip-btn" data-crop="Potato">🥔 <span data-i18n="potato">Potato</span></button>
+          <button class="chip-btn" data-crop="Tomato">🍅 <span data-i18n="tomato">Tomato</span></button>
+        </div>
+        <div class="cards" id="disList"></div>
+      </section>
+
+      <!-- ===== TREATMENT GUIDE ===== -->
+      <section class="page" id="treatment" hidden>
+        <h1 data-i18n="navTreat">Treatment Guide</h1>
+        <p class="lead" data-i18n="treatSub">Step-by-step care for each disease. Tap to open.</p>
+        <div id="treatList"></div>
+        <p class="disclaimer" data-i18n="disc">This is guidance only. For chemical sprays, check dose and safety with your local agriculture officer or Krishi Vigyan Kendra (KVK).</p>
+      </section>
+
+      <!-- ===== TIPS ===== -->
+      <section class="page" id="tips" hidden>
+        <h1 data-i18n="navTips">Tips & Prevention</h1>
+        <p class="lead" data-i18n="tipsSub">Simple habits that keep your crop healthy.</p>
+        <div class="cards" id="tipsList"></div>
+      </section>
+
+    </main>
+    <footer>LeafCare — AI Powered Disease Detection and Treatment Advisory System</footer>
+  </div>
+</div>
+
+<dialog id="modal"><div id="modalBody"></div><button class="btn" id="closeModal" data-i18n="close">Close</button></dialog>
+<div id="toast" class="toast" hidden></div>
+<script src="script.js"></script>
+</body>
+</html>
