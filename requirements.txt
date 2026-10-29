@@ -1,6 +1,6 @@
 flask
-tensorflow
-numpy
-pillow
-streamlit
 gunicorn
+pillow
+numpy
+tensorflow-cpu
+keras>=3.13.2
